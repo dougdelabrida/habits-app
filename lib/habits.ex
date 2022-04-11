@@ -8,4 +8,8 @@ defmodule Habits do
     # TODO: mark as success and persist in the database
     {:ok, habit}
   end
+
+  def delete(name) do
+    Habit.Store.delete_habit(name)
+  end
 end

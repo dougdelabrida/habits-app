@@ -9,6 +9,10 @@ defmodule Habit.Store do
     GenServer.call(__MODULE__, {:add_habit, habit})
   end
 
+  def delete_habit(name) do
+    GenServer.call(__MODULE__, {:delete_habit, name})
+  end
+
   # GenServer callbacks
   def init(:ok) do
     {:ok, %{habits: [Habit.new(name: "Floss"), Habit.new(name: "Study elixir")]}}
@@ -20,5 +24,13 @@ defmodule Habit.Store do
       habits: [habit | state_server.habits]
     }
     {:reply, habit, state}
+  end
+
+  def handle_call({:delete_habit, name}, _from, state_server) do
+    state = %{
+      state_server |
+      habits: Enum.filter(state_server.habits, fn x -> x.name != name end)
+    }
+    {:reply, name, state}
   end
 end
